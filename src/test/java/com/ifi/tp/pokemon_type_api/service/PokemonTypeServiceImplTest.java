@@ -1,4 +1,4 @@
-package com.ifi.pokemon_type_api.service;
+package com.ifi.tp.pokemon_type_api.service;
 
 import com.ifi.tp.pokemon_type_api.repository.PokemonTypeRepository;
 import com.ifi.tp.pokemon_type_api.repository.PokemonTypeRepositoryImpl;
@@ -6,6 +6,8 @@ import com.ifi.tp.pokemon_type_api.service.PokemonTypeService;
 import com.ifi.tp.pokemon_type_api.service.PokemonTypeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,6 +23,17 @@ public class PokemonTypeServiceImplTest {
         pokemonTypeService.getPokemonType(25);
 
         verify(pokemonTypeRepository).findPokemonTypeById(25);
+    }
+    @Test
+    void findPokemonTypeByType_withTwoTypes(){
+        var types = Arrays.asList("bug", "poison");
+        var pokemonTypeRepository = mock(PokemonTypeRepository.class);
+        var pokemonTypeService = new PokemonTypeServiceImpl(pokemonTypeRepository);
+        var pokemons = pokemonTypeService.getPokemonTypeByType(types);
+
+        verify(pokemonTypeRepository).findPokemonTypeByType(types);
+        System.out.println(pokemons.toString());
+        assertEquals(5, pokemons.size());
     }
 
     @Test

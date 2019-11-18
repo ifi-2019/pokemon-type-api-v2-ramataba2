@@ -1,8 +1,11 @@
-package com.ifi.pokemon_type_api.repository;
+package com.ifi.tp.pokemon_type_api.repository;
 import com.ifi.tp.pokemon_type_api.repository.PokemonTypeRepository;
 import com.ifi.tp.pokemon_type_api.repository.PokemonTypeRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,6 +61,14 @@ class PokemonTypeRepositoryImplTest {
         assertEquals(repoByName, repoByClass);
         assertNotNull(repoByName);
         assertNotNull(repoByClass);
+    }
+    @Test
+    void findPokemonTypeByType_withTwoTypes(){
+        var types = Arrays.asList("bug", "poison");
+        var pokemons = repository.findPokemonTypeByType(types);
+        assertNotNull(pokemons);
+        System.out.println(pokemons.toString());
+        assertEquals(5, pokemons.size());
     }
 
 }

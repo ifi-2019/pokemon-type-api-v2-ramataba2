@@ -1,7 +1,13 @@
-package com.ifi.pokemon_type_api.controller;
+package com.ifi.tp.pokemon_type_api.controller;
 import com.ifi.tp.pokemon_type_api.bo.PokemonType;
 import com.ifi.tp.pokemon_type_api.service.PokemonTypeService;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -9,7 +15,7 @@ import static org.mockito.Mockito.*;
 class PokemonTypeControllerTest {
 
     @Test
-    void getPokemonType_shouldCallTheService(){
+    void getPokemonType_shouldCallTheService() {
         var service = mock(PokemonTypeService.class);
         var controller = new PokemonTypeController(service);
 
@@ -25,7 +31,7 @@ class PokemonTypeControllerTest {
     }
 
     @Test
-    void getAllPokemonTypes_shouldCallTheService(){
+    void getAllPokemonTypes_shouldCallTheService() {
         var service = mock(PokemonTypeService.class);
         var controller = new PokemonTypeController(service);
 
@@ -34,4 +40,46 @@ class PokemonTypeControllerTest {
         verify(service).getAllPokemonTypes();
     }
 
+    @Test
+    void pokemonTypeController_shouldBeAnnotated() {
+        var controllerAnnotation =
+                PokemonTypeController.class.getAnnotation(RestController.class);
+        assertNotNull(controllerAnnotation);
+
+        var requestMappingAnnotation =
+                PokemonTypeController.class.getAnnotation(RequestMapping.class);
+        assertArrayEquals(new String[]{"/pokemon-types"}, requestMappingAnnotation.value());
+    }
+
+    @Test
+    void getPokemonTypeFromId_shouldBeAnnotated() throws NoSuchMethodException {
+        var getPokemonTypeFromId =
+                PokemonTypeController.class.getDeclaredMethod("getPokemonTypeFromId", int.class);
+        var getMapping = getPokemonTypeFromId.getAnnotation(GetMapping.class);
+
+        assertNotNull(getMapping);
+        assertArrayEquals(new String[]{"/{id}"}, getMapping.value());
+    }
+
+    @Test
+    void getAllPokemonTypes_shouldBeAnnotated() throws NoSuchMethodException {
+        var getAllPokemonTypes =
+                PokemonTypeController.class.getDeclaredMethod("getAllPokemonTypes");
+        var getMapping = getAllPokemonTypes.getAnnotation(GetMapping.class);
+
+        assertNotNull(getMapping);
+        assertArrayEquals(new String[]{"/"}, getMapping.value());
+
+    }
+    @Test
+   void getTypes_shouldBeAnnotated() throws NoSuchMethodException{
+        var getType = PokemonTypeController.class.getDeclaredMethod("getPokemonTypeFromType", List.class);
+        var getMapping = getType.getAnnotation(RequestMapping.class);
+        System.out.println(getMapping.value()[0] + "  " + getMapping.params()[0]);
+        assertNotNull(getMapping);
+        var service = mock(PokemonTypeService.class);
+        var controller = new PokemonTypeController(service);
+        var pokemon = controller.getPokemonTypeFromType(Arrays.asList("bug","poison"));
+        assertEquals(5, pokemon.size());
+    }
 }
